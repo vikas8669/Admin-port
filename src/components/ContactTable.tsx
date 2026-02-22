@@ -78,7 +78,7 @@ export default function ContactsTable() {
             <TableHead>Email</TableHead>
             <TableHead>Message</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right ">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -132,7 +132,7 @@ export default function ContactsTable() {
                         <Check className="w-4 h-4" />
                       </Button>
                     )}
-                    <Button
+                    <Button className="cursor-pointer"
                       variant="outline"
                       size="sm"
                       onClick={() => {
@@ -154,7 +154,7 @@ export default function ContactsTable() {
 
       {/* ================= Reply Dialog ================= */}
       <Dialog open={replyDialogOpen} onOpenChange={setReplyDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg ">
           <DialogHeader>
             <DialogTitle>Reply to {selectedContact?.name}</DialogTitle>
           </DialogHeader>
