@@ -20,9 +20,6 @@ import { LineChart, Line, CartesianGrid, XAxis, ResponsiveContainer } from "rech
 import { getContacts } from "@/context/Contact"
 import { TrendingUp, Users, CreditCard, Globe } from "lucide-react"
 
-/* ===============================
-   🔢 Animated Counter
-================================= */
 const AnimatedNumber = React.memo(({ value }: { value: number }) => {
   const [display, setDisplay] = React.useState(0)
 
@@ -98,8 +95,8 @@ const Hero = React.memo(() => {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Contacts */}
         <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
-          <Card className="shadow-lg hover:shadow-xl">
-            <CardHeader className="flex justify-between items-start">
+          <Card className="shadow-lg hover:shadow-xl border transition-all ">
+            <CardHeader className="flex justify-between items-start ">
               <div>
                 <CardTitle>Total Contacts</CardTitle>
                 <CardDescription>All submissions</CardDescription>

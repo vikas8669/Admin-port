@@ -1,14 +1,17 @@
 const apiEndPoints = import.meta.env.VITE_API_URL
-console.log("meta =>>>>>>>>>......",import.meta.env.VITE_API_URL )
+console.log("meta =>>>>>>>>>......", import.meta.env.VITE_API_URL)
 
 
-export const apiUrl =  {
-    
+export const apiUrl = {
+
     login: `${apiEndPoints}/login`,
     signUp: `${apiEndPoints}/signup`,
     verify: `${apiEndPoints}/verify`,
     adminOnly: `${apiEndPoints}/admin-only`,
     logout: `${apiEndPoints}/logout`,
     CONTACT: `${apiEndPoints}/contact`,
-    getContact: `${apiEndPoints}/contact`
+    getContact: `${apiEndPoints}/contact`,
+    getAllContacts: `${apiEndPoints}/contact`,
+    markRead: (id: string) => `${apiEndPoints}/contact/${id}/mark-read`,
+    sendReply: (id: string) => `${apiEndPoints}/contact/${id}/reply`,
 }
