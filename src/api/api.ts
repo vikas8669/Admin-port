@@ -1,8 +1,9 @@
 import axios  from 'axios'
 
 
+const baseUrl = "https://vk-backend-psi.vercel.app/api/v1"
 
-const baseUrl = "https://vk-backend-psi.vercel.app"
+// const baseUrl = "http://localhost:8000/api/v1/"
 
 const API = axios.create( {
     baseURL: baseUrl
