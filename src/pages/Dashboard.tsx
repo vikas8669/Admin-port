@@ -1,8 +1,9 @@
+import Hero from "@/components/Hero"
 
 const Dashboard = () => {
   return (
     <div>
-      new dhash
+      <Hero />
     </div>
   )
 }

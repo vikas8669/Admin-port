@@ -22,74 +22,82 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Bom x",
-      logo: GalleryVerticalEnd,
-      plan: "Web service",
-    },
-  ],
-  navMain: [
-    {
-      title: "Blog Management",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        { title: "All Posts", url: "/admin/posts" },
-        { title: "Add New Post", url: "/admin/posts/new" },
-        { title: "Categories", url: "/admin/categories" },
-      ],
-    },
-    {
-      title: "Contact Management",
-      icon: Bot,
-      items: [
-        { title: "All Messages", url: "/admin/messages" },
-        { title: "Unread", url: "/admin/messages/unread" },
-        { title: "Replied", url: "/admin/messages/replied" },
-      ],
-    },
-  ],
-
-  projects: [
-    {
-      name: "All Projects",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Add Project",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Categories",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const storedUser = localStorage.getItem("user")
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null
+
+  const realUser = {
+    name: parsedUser?.username || "User",
+    email: parsedUser?.email || "No Email",
+    avatar: "/avatars/shadcn.jpg", // you can keep static avatar or dynamic later
+  }
+
+  const data = {
+    user: realUser,
+    teams: [
+      {
+        name: "Bom x",
+        logo: GalleryVerticalEnd,
+        plan: "Web service",
+        url: "/",
+      },
+    ],
+    navMain: [
+      {
+        title: "Blog Management",
+        icon: SquareTerminal,
+        isActive: true,
+        items: [
+          { title: "All Posts", url: "/admin/posts" },
+          { title: "Add New Post", url: "/admin/posts/new" },
+          { title: "Categories", url: "/admin/categories" },
+        ],
+      },
+      {
+        title: "Contact Management",
+        icon: Bot,
+        items: [
+          { title: "All Messages", url: "/admin/messages" },
+          { title: "Unread", url: "/admin/messages/unread" },
+          { title: "Replied", url: "/admin/messages/replied" },
+        ],
+      },
+    ],
+    projects: [
+      {
+        name: "All Projects",
+        url: "#",
+        icon: Frame,
+      },
+      {
+        name: "Add Project",
+        url: "#",
+        icon: PieChart,
+      },
+      {
+        name: "Categories",
+        url: "#",
+        icon: Map,
+      },
+    ],
+  }
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
+
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   )

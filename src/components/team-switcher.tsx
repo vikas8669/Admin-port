@@ -1,7 +1,7 @@
 "use client"
-
 import * as React from "react"
 import { ChevronsUpDown } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 import {
   DropdownMenu,
@@ -21,8 +21,10 @@ export function TeamSwitcher({
     name: string
     logo: any
     plan: string
+    url: string
   }[]
 }) {
+  const navigate = useNavigate()
   const [activeTeam] = React.useState(teams[0])
 
   if (!activeTeam) return null
@@ -32,7 +34,10 @@ export function TeamSwitcher({
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg">
+            <SidebarMenuButton
+              size="lg"
+              onClick={() => navigate(activeTeam.url)}
+            >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <activeTeam.logo className="size-4" />
               </div>

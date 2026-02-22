@@ -1,36 +1,61 @@
-import { Routes, Route, Navigate } from "react-router-dom"
-import DashboardLayout from "./components/Dashboard"
-import Dashboard from "./pages/Dashboard"
-import AddPost from "./pages/Blog/AddPost"
-import AllPosts from "./pages/Blog/AllPosts"
-import Categories from "./pages/Blog/Categories"
-import AllMessages from "./pages/contact/AllMessages"
-import RepliedMessages from "./pages/contact/RepliedMessages"
-import UnreadMessages from "./pages/contact/UnreadMessages"
+import { Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import DashboardLayout from "./components/Dashboard";
+import Dashboard from "./pages/Dashboard";
+import AddPost from "./pages/Blog/AddPost";
+import AllPosts from "./pages/Blog/AllPosts";
+import Categories from "./pages/Blog/Categories";
+import AllMessages from "./pages/contact/AllMessages";
+import RepliedMessages from "./pages/contact/RepliedMessages";
+import UnreadMessages from "./pages/contact/UnreadMessages";
 
+import Login from "./pages/Auth/Login";
 
-
+import ProtectedRoute from "./components/ProtectRoute";
+import PublicRoute from "./pages/Auth/PublicRoute";
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
-<Routes>
-      {/* Redirect root to admin */}
-      <Route path="/" element={<Navigate to="/admin" replace />} />
+    <QueryClientProvider client={queryClient}>
+      <Routes>
 
-      <Route path="/admin" element={<DashboardLayout />}>
-        <Route index element={<Dashboard />} />
+        {/* Redirect root */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-        <Route path="posts" element={<AllPosts />} />
-        <Route path="posts/new" element={<AddPost />} />
-        <Route path="categories" element={<Categories />} />
+        {/* Public Route (Login protected if already logged in) */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
 
-        <Route path="messages" element={<AllMessages />} />
-        <Route path="messages/unread" element={<UnreadMessages />} />
-        <Route path="messages/replied" element={<RepliedMessages />} />
-      </Route>
-    </Routes>
-  )
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="posts" element={<AllPosts />} />
+          <Route path="posts/new" element={<AddPost />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="messages" element={<AllMessages />} />
+          <Route path="messages/unread" element={<UnreadMessages />} />
+          <Route path="messages/replied" element={<RepliedMessages />} />
+        </Route>
+
+      </Routes>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;

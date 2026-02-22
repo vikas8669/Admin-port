@@ -1,10 +1,7 @@
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from "lucide-react"
 
 import {
@@ -12,6 +9,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +19,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+
+import { useLogout } from "@/context/Login"
 
 export function NavUser({
   user,
@@ -38,6 +39,40 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const logout = useLogout()
+
+  // 🎨 Color generator
+  const getColorFromName = (name: string) => {
+    const colors = [
+      "bg-red-500",
+      "bg-blue-500",
+      "bg-green-500",
+      "bg-purple-500",
+      "bg-pink-500",
+      "bg-indigo-500",
+      "bg-yellow-500",
+      "bg-teal-500",
+    ]
+
+    let hash = 0
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash)
+    }
+
+    const index = Math.abs(hash) % colors.length
+    return colors[index]
+  }
+
+  const initials = user.name
+    ? user.name
+        .split(" ")
+        .map((word) => word[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "U"
+
+  const avatarColor = getColorFromName(user.name || "User")
 
   return (
     <SidebarMenu>
@@ -50,15 +85,22 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback
+                  className={`rounded-lg text-white font-medium ${avatarColor}`}
+                >
+                  {initials}
+                </AvatarFallback>
               </Avatar>
+
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
+
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
@@ -69,38 +111,32 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback
+                    className={`rounded-lg text-white font-medium ${avatarColor}`}
+                  >
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
+
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
+
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+
+            <DropdownMenuItem onClick={logout} className="cursor-pointer">
               <LogOut />
               Log out
             </DropdownMenuItem>

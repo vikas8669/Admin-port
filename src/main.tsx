@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './context/theme-provider.tsx'
+import { Toaster } from 'sonner'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
@@ -11,5 +12,6 @@ createRoot(document.getElementById('root')!).render(
         <App />
       </BrowserRouter>
     </ThemeProvider>
+     <Toaster richColors position="bottom-right" />
   </StrictMode>,
 )
