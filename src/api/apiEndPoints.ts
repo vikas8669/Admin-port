@@ -9,4 +9,6 @@ export const apiUrl =  {
     verify: `${apiEndPoints}/verify`,
     adminOnly: `${apiEndPoints}/admin-only`,
     logout: `${apiEndPoints}/logout`,
+    CONTACT: `${apiEndPoints}/contact`,
+    getContact: `${apiEndPoints}/contact`
 }

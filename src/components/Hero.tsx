@@ -1,9 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { TrendingUp, Users, CreditCard } from "lucide-react"
-
+import { motion } from "framer-motion"
+import { useQuery } from "@tanstack/react-query"
 import {
   Card,
   CardContent,
@@ -11,59 +10,19 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card"
-
+import { Skeleton } from "@/components/ui/skeleton"
 import {
-  ChartContainer,
+  // ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-
-import {
-  Line,
-  LineChart,
-  CartesianGrid,
-  XAxis,
-} from "recharts"
-
+import { LineChart, Line, CartesianGrid, XAxis, ResponsiveContainer } from "recharts"
+import { getContacts } from "@/context/Contact"
+import { TrendingUp, Users, CreditCard, Globe } from "lucide-react"
 
 /* ===============================
-   📊 STATIC DATA (TOP OPTIMIZED)
+   🔢 Animated Counter
 ================================= */
-
-const weeklyData = [
-  { name: "Mon", revenue: 1200 },
-  { name: "Tue", revenue: 2100 },
-  { name: "Wed", revenue: 1800 },
-  { name: "Thu", revenue: 2400 },
-  { name: "Fri", revenue: 2800 },
-]
-
-const monthlyData = [
-  { name: "Jan", revenue: 4000 },
-  { name: "Feb", revenue: 3000 },
-  { name: "Mar", revenue: 5000 },
-  { name: "Apr", revenue: 4780 },
-  { name: "May", revenue: 5890 },
-  { name: "Jun", revenue: 6390 },
-]
-
-const yearlyData = [
-  { name: "2022", revenue: 32000 },
-  { name: "2023", revenue: 45000 },
-  { name: "2024", revenue: 52000 },
-]
-
-const chartConfig = {
-  revenue: {
-    label: "Revenue",
-    color: "hsl(var(--primary))",
-  },
-}
-
-/* ===============================
-   🔢 Animated Counter (Optimized)
-================================= */
-
 const AnimatedNumber = React.memo(({ value }: { value: number }) => {
   const [display, setDisplay] = React.useState(0)
 
@@ -89,185 +48,186 @@ const AnimatedNumber = React.memo(({ value }: { value: number }) => {
 })
 
 AnimatedNumber.displayName = "AnimatedNumber"
-
-/* ===============================
-   🚀 HERO DASHBOARD
-================================= */
-
-const Hero = () => {
+const Hero = React.memo(() => {
   const [filter, setFilter] = React.useState<"Week" | "Month" | "Year">("Month")
 
-  /* 🔥 Memoized Data (Performance Boost) */
-  const data = React.useMemo(() => {
-    switch (filter) {
-      case "Week":
-        return weeklyData
-      case "Year":
-        return yearlyData
-      default:
-        return monthlyData
+  const { data, isLoading } = useQuery<any>({
+    queryKey: ["contacts", filter],
+    queryFn: () => getContacts(filter),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  })
+
+  const chartData = React.useMemo(() => {
+    if (!data?.analytics?.length) return []
+    if (data.analytics.length === 1) {
+      return [
+        { name: data.analytics[0].name, revenue: data.analytics[0].count },
+        { name: "Next", revenue: data.analytics[0].count },
+      ]
     }
-  }, [filter])
+    return data.analytics.map((item: any) => ({
+      name: item.name || "Unknown",
+      revenue: item.count || 0,
+    }))
+  }, [data])
+
+  const totalContacts = data?.totalContacts || 0
+  const growthPercent = data?.growthPercent
+  const devices = data?.devices || {}
+  const browsers = data?.browsers || {}
+
+  const growthColor =
+    growthPercent && growthPercent > 0 ? "text-green-400" : "text-red-400"
+
+  const badgeVariants: any = {
+    hidden: { opacity: 0, y: 10 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.05, duration: 0.4, ease: "easeOut" },
+    }),
+  }
+
+  const lineColor = "#6366f1"
+  const dotStrokeColor = "#6366f1"
 
   return (
-    <div className="space-y-8">
-
-      {/* ================= KPI CARDS ================= */}
-
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
-        {/* Revenue */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1 }}>
-          <Card className="relative overflow-hidden border shadow-md hover:shadow-xl transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
-            <CardHeader className="flex flex-row items-center justify-between">
+    <div className="space-y-8 max-w-7xl mx-auto px-2 sm:px-4">
+      {/* ================= KPI Cards ================= */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Total Contacts */}
+        <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
+          <Card className="shadow-lg hover:shadow-xl">
+            <CardHeader className="flex justify-between items-start">
               <div>
-                <CardTitle>Total Revenue</CardTitle>
-                <CardDescription>Current period</CardDescription>
+                <CardTitle>Total Contacts</CardTitle>
+                <CardDescription>All submissions</CardDescription>
               </div>
-              <TrendingUp className="text-primary" />
+              <Users className="w-6 h-6 text-gray-600" />
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">
-                $<AnimatedNumber value={52890} />
-              </p>
-              <p className="text-sm text-muted-foreground">
-                +18% from last month
-              </p>
+              {isLoading ? <Skeleton className="h-10 w-24" /> : <p className="text-3xl font-bold"><AnimatedNumber value={totalContacts} /></p>}
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Users */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1 }}>
-          <Card className="relative overflow-hidden border shadow-md hover:shadow-xl transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent" />
-            <CardHeader className="flex flex-row items-center justify-between">
+        {/* Growth % */}
+        <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
+          <Card className="shadow-lg hover:shadow-xl">
+            <CardHeader className="flex justify-between items-start">
               <div>
-                <CardTitle>Active Users</CardTitle>
-                <CardDescription>Live users</CardDescription>
+                <CardTitle>Growth %</CardTitle>
+                <CardDescription>Compared to last period</CardDescription>
               </div>
-              <Users className="text-blue-500" />
+              <TrendingUp className="w-6 h-6 text-gray-600" />
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">
-                <AnimatedNumber value={1248} />
-              </p>
-              <p className="text-sm text-muted-foreground">
-                +8.2% growth
-              </p>
+              {isLoading ? <Skeleton className="h-10 w-16" /> : <p className={`text-3xl font-bold ${growthColor}`}>{growthPercent ?? "-"}%</p>}
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Subscriptions */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1 }}>
-          <Card className="relative overflow-hidden border shadow-md hover:shadow-xl transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent" />
-            <CardHeader className="flex flex-row items-center justify-between">
+        {/* Devices */}
+        <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
+          <Card className="shadow-lg hover:shadow-xl">
+            <CardHeader className="flex justify-between items-start">
               <div>
-                <CardTitle>Subscriptions</CardTitle>
-                <CardDescription>New signups</CardDescription>
+                <CardTitle>Devices</CardTitle>
+                <CardDescription>Used by users</CardDescription>
               </div>
-              <CreditCard className="text-purple-500" />
+              <CreditCard className="w-6 h-6 text-gray-600" />
             </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                <AnimatedNumber value={320} />
-              </p>
-              <p className="text-sm text-muted-foreground">
-                +15% increase
-              </p>
+            <CardContent className="flex flex-wrap gap-2">
+              {isLoading
+                ? Array(2).fill(0).map((_, idx) => <Skeleton key={idx} className="h-6 w-16 rounded-full" />)
+                : Object.entries(devices).length > 0
+                ? Object.entries(devices).map(([device, count]: any, idx) => (
+                    <motion.div key={idx} custom={idx} initial="hidden" animate="visible" variants={badgeVariants} className="px-3 py-1 bg-gray-100 rounded-full text-xs font-semibold text-gray-800 flex items-center justify-center transition-all duration-300">
+                      {device}: {count}
+                    </motion.div>
+                  ))
+                : <span className="text-gray-400">No data</span>
+              }
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Browsers */}
+        <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
+          <Card className="shadow-lg hover:shadow-xl">
+            <CardHeader className="flex justify-between items-start">
+              <div>
+                <CardTitle>Browsers</CardTitle>
+                <CardDescription>Used by users</CardDescription>
+              </div>
+              <Globe className="w-6 h-6 text-gray-600" />
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+              {isLoading
+                ? Array(2).fill(0).map((_, idx) => <Skeleton key={idx} className="h-6 w-16 rounded-full" />)
+                : Object.entries(browsers).length > 0
+                ? Object.entries(browsers).map(([browser, count]: any, idx) => (
+                    <motion.div key={idx} custom={idx} initial="hidden" animate="visible" variants={badgeVariants} className="px-3 py-1 bg-gray-100 rounded-full text-xs font-semibold text-gray-800 flex items-center justify-center transition-all duration-300">
+                      {browser}: {count}
+                    </motion.div>
+                  ))
+                : <span className="text-gray-400">No data</span>
+              }
             </CardContent>
           </Card>
         </motion.div>
       </div>
 
-      {/* ================= CHART SECTION ================= */}
-
-      <Card className="shadow-md">
-        <CardHeader className="flex flex-row items-center justify-between">
+      {/* ================= Chart ================= */}
+      <Card className="shadow-lg">
+        <CardHeader className="flex justify-between items-center">
           <div>
-            <CardTitle>Revenue Analytics</CardTitle>
-            <CardDescription>Performance overview</CardDescription>
+            <CardTitle>Contact Analytics</CardTitle>
+            <CardDescription>Based on submissions</CardDescription>
           </div>
 
-          {/* Filter */}
           <div className="flex gap-2">
             {["Week", "Month", "Year"].map((item) => (
-              <button
-                key={item}
-                onClick={() => setFilter(item as any)}
-                className={`px-3 py-1 rounded-md text-sm border transition-all ${
-                  filter === item
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-              >
+              <button key={item} onClick={() => setFilter(item as any)} className={`px-3 py-1 rounded-md text-sm border transition-colors duration-200 ${filter === item ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}>
                 {item}
               </button>
             ))}
           </div>
         </CardHeader>
 
-        <CardContent>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={filter}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ChartContainer
-                config={chartConfig}
-                className="h-[350px] w-full"
-              >
-                <LineChart data={data}>
-                  <CartesianGrid vertical={false} />
-
-                  <XAxis
-                    dataKey="name"
-                    tickLine={false}
-                    axisLine={false}
-                  />
-
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent />}
-                  />
-
-                  <Line
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke="var(--color-revenue)"
-                    strokeWidth={3}
-                    dot={({ cx, cy }) => (
-                      <circle
-                        cx={cx}
-                        cy={cy}
-                        r={6}
-                        fill="white"
-                        stroke="var(--color-revenue)"
-                        strokeWidth={3}
-                        className="drop-shadow-md"
-                      />
-                    )}
-                    activeDot={{
-                      r: 8,
-                      stroke: "var(--color-revenue)",
-                      strokeWidth: 3,
-                      fill: "white",
-                    }}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </motion.div>
-          </AnimatePresence>
+        <CardContent className="min-h-[350px] flex items-center justify-center">
+          {isLoading ? (
+            <Skeleton className="h-full w-full rounded-md" />
+          ) : chartData.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-[350px] text-muted-foreground">
+              <span className="text-4xl mb-2">📊</span>
+              <span>No analytics data available</span>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={350}>
+              <LineChart data={chartData}>
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke={lineColor}
+                  strokeWidth={3}
+                  dot={({ cx, cy }) => (
+                    <circle cx={cx} cy={cy} r={6} fill="white" stroke={dotStrokeColor} strokeWidth={3} className="drop-shadow-md" />
+                  )}
+                  activeDot={{ r: 8, stroke: dotStrokeColor, strokeWidth: 3, fill: "white" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
         </CardContent>
       </Card>
     </div>
   )
-}
+})
 
+Hero.displayName = "Hero"
 export default Hero
