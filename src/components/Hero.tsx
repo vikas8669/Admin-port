@@ -23,7 +23,6 @@ import {
   LineChart,
   CartesianGrid,
   XAxis,
-  ResponsiveContainer,
 } from "recharts"
 
 
