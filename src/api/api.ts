@@ -1,7 +1,7 @@
 import axios  from 'axios'
 
 
-const baseUrl = "https://vk-backend-psi.vercel.app/api/v1"
+const baseUrl = import.meta.env.VITE_API_URL
 
 // const baseUrl = "http://localhost:8000/api/v1/"
 
