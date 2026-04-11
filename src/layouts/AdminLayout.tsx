@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import PageTransition from "@/components/PageTransition"
 import { AppSidebar } from "./Sidebar/app-sidebar"

@@ -2,7 +2,7 @@ import * as React from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { useDeleteProject, useProjects } from "@/context/Projects"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useDebouncedValue } from "@/hooks/use-debounce"
 import { Search, Plus, Trash2, Edit, ImageIcon, Loader2 } from "lucide-react"
@@ -25,7 +25,7 @@ const AllProjects = () => {
     page,
     limit,
     q: debouncedQ.trim() || undefined,
-  })
+  });
   const deleteMutation = useDeleteProject()
   const [deletingId, setDeletingId] = React.useState<string | null>(null)
 

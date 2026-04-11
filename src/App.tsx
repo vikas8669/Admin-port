@@ -1,6 +1,5 @@
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
 
 import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/Dashboard";

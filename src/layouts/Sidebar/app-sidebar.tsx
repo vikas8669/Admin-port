@@ -5,7 +5,6 @@ import {
   Bot,
   Frame,
   GalleryVerticalEnd,
-  Map,
   PieChart,
   SquareTerminal,
 } from "lucide-react"
