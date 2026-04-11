@@ -222,7 +222,7 @@ const AddProjects = () => {
 
               {customFields.map((field, index) => (
                 <div
-                  key={`${field.key}-${index}`}
+                  key={`custom-field-${index}`}
                   className="grid gap-2 md:grid-cols-3"
                 >
                   <Input
