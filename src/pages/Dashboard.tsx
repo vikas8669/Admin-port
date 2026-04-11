@@ -1,5 +1,5 @@
-import ContactsTable from "@/components/ContactTable"
-import Hero from "@/components/Hero"
+import ContactsTable from "./Dashboard/components/ContactTable"
+import Hero from "./Dashboard/components/Hero"
 
 const Dashboard = () => {
   return (

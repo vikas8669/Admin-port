@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+// import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function AuthLayout({
   children,

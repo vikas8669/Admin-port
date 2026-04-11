@@ -14,4 +14,6 @@ export const apiUrl = {
     getAllContacts: `${apiEndPoints}/contact`,
     markRead: (id: string) => `${apiEndPoints}/contact/${id}/mark-read`,
     sendReply: (id: string) => `${apiEndPoints}/contact/${id}/reply`,
+    projects: `${apiEndPoints}/projects`, // POST, GET (list)
+    projectById: (id: string) => `${apiEndPoints}/projects/${id}`, // GET, PUT, DELETE
 }

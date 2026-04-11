@@ -1,7 +1,8 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 
-import DashboardLayout from "./components/Dashboard";
+import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/Dashboard";
 import AddPost from "./pages/Blog/AddPost";
 import AllPosts from "./pages/Blog/AllPosts";
@@ -14,6 +15,9 @@ import Login from "./pages/Auth/Login";
 
 import ProtectedRoute from "./components/ProtectRoute";
 import PublicRoute from "./pages/Auth/PublicRoute";
+import AddProjects from "./pages/Projects/AddProjects";
+import AllProjects from "./pages/Projects/AllProjects";
+import EditProject from "./pages/Projects/EditProject";
 
 function App() {
   const queryClient = new QueryClient();
@@ -40,7 +44,7 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute>
-              <DashboardLayout />
+              <AdminLayout />
             </ProtectedRoute>
           }
         >
@@ -51,8 +55,11 @@ function App() {
           <Route path="messages" element={<AllMessages />} />
           <Route path="messages/unread" element={<UnreadMessages />} />
           <Route path="messages/replied" element={<RepliedMessages />} />
-        </Route>
+          <Route path="/admin/all/projects" element={<AllProjects />} />
+          <Route path="/admin/projects" element={<AddProjects />} />
+          <Route path="/admin/projects/:id/edit" element={<EditProject />} />
 
+        </Route>
       </Routes>
     </QueryClientProvider>
   );
