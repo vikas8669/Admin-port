@@ -5,6 +5,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/Dashboard";
 import AddPost from "./pages/Blog/AddPost";
 import AllPosts from "./pages/Blog/AllPosts";
+import EditPost from "./pages/Blog/EditPost";
 import Categories from "./pages/Blog/Categories";
 import AllMessages from "./pages/contact/AllMessages";
 import RepliedMessages from "./pages/contact/RepliedMessages";
@@ -50,13 +51,14 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="posts" element={<AllPosts />} />
           <Route path="posts/new" element={<AddPost />} />
+          <Route path="posts/:id/edit" element={<EditPost />} />
           <Route path="categories" element={<Categories />} />
           <Route path="messages" element={<AllMessages />} />
           <Route path="messages/unread" element={<UnreadMessages />} />
           <Route path="messages/replied" element={<RepliedMessages />} />
-          <Route path="/admin/all/projects" element={<AllProjects />} />
-          <Route path="/admin/projects" element={<AddProjects />} />
-          <Route path="/admin/projects/:id/edit" element={<EditProject />} />
+          <Route path="all-projects" element={<AllProjects />} />
+          <Route path="projects" element={<AddProjects />} />
+          <Route path="projects/:id/edit" element={<EditProject />} />
 
         </Route>
       </Routes>

@@ -70,11 +70,11 @@ export default function Login() {
                             <CardHeader>
                                 <CardTitle className="text-xl sm:text-2xl text-white">Login to your account</CardTitle>
                                 <CardDescription className="text-gray-300 text-sm">Enter your email below to login</CardDescription>
-                                <CardAction>
+                                {/* <CardAction>
                                     <Button variant="link" className="text-purple-400 p-0 h-auto" onClick={() => navigate("/signup")}>
                                         Sign Up
                                     </Button>
-                                </CardAction>
+                                </CardAction> */}
                             </CardHeader>
                             <CardContent>
                                 <form onSubmit={handleSubmit(onSubmit)}>

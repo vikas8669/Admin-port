@@ -14,6 +14,7 @@ import {
 
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import NotificationBell from "./NotificationBell";
 import {Link} from "react-router-dom";
 
 export default function NavbarDemo() {
@@ -43,7 +44,8 @@ export default function NavbarDemo() {
           <NavbarLogo />
           <NavItems className="flex justify-end px-18 gap" items={navItems} />
 
-          <div className="">
+          <div className="flex items-center gap-1">
+            <NotificationBell />
             <NavbarButton variant="primary">
               <ThemeToggle />
             </NavbarButton>
@@ -55,7 +57,8 @@ export default function NavbarDemo() {
           <MobileNavHeader>
             <NavbarLogo />
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <NotificationBell />
               <ThemeToggle />
               <MobileNavToggle
                 isOpen={isMobileMenuOpen}

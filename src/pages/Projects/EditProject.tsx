@@ -28,6 +28,7 @@ const EditProject = () => {
   const [title, setTitle] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [isActive, setIsActive] = React.useState(true)
+  const [packageDetails, setPackageDetails] = React.useState("")
   const [imageFiles, setImageFiles] = React.useState<File[]>([])
   const [customFields, setCustomFields] = React.useState<CustomFieldRow[]>([])
   const [previewUrls, setPreviewUrls] = React.useState<string[]>([])
@@ -39,6 +40,7 @@ const EditProject = () => {
     setTitle(project.title || "")
     setDescription(project.description || "")
     setIsActive(project.isActive ?? true)
+    setPackageDetails(project.packageDetails || "")
     const rawFields =
       typeof project.customFields === "string"
         ? (() => {
@@ -114,6 +116,7 @@ const EditProject = () => {
             Object.keys(customFieldsObject).length > 0
               ? customFieldsObject
               : undefined,
+          packageDetails: packageDetails.trim() || undefined,
           images: imageFiles.length > 0 ? imageFiles : undefined,
         },
       })
@@ -182,6 +185,17 @@ const EditProject = () => {
                 onCheckedChange={(value) => setIsActive(Boolean(value))}
               />
               <Label htmlFor="project-active">Active</Label>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="package-details">Package Contents / Extra Information</Label>
+              <Textarea
+                id="package-details"
+                placeholder="What's included in the zip file? (e.g. Source code, Documentation, etc.)"
+                value={packageDetails}
+                onChange={(e) => setPackageDetails(e.target.value)}
+                className="min-h-[100px]"
+              />
             </div>
 
             <div className="grid gap-3">

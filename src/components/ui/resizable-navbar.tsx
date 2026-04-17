@@ -77,7 +77,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
           : "none",
       }}
       transition={{
-        type: "spring",
+        type: "spring" as const,
         stiffness: 200,
         damping: 50,
       }}
@@ -139,7 +139,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         y: visible ? 20 : 0,
       }}
       transition={{
-        type: "spring",
+        type: "spring" as const,
         stiffness: 200,
         damping: 50,
       }}

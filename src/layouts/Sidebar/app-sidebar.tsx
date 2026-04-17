@@ -66,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     projects: [
       {
         name: "All Projects",
-        url: "/admin/all/projects",
+        url: "/admin/all-projects",
         icon: Frame,
       },
       {

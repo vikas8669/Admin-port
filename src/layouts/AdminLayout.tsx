@@ -14,6 +14,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import ThemeToggle from "@/components/ThemeToggle"
+import NotificationBell from "@/components/NotificationBell"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function DashboardLayout() {
@@ -46,6 +47,7 @@ export default function DashboardLayout() {
           </div>
 
           <div className="flex items-center gap-4">
+            <NotificationBell />
             <ThemeToggle />
             
             <div className="flex items-center gap-3 border-l pl-4 border-border/50">

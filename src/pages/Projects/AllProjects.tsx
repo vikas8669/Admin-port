@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useDebouncedValue } from "@/hooks/use-debounce"
-import { Search, Plus, Trash2, Edit, ImageIcon, Loader2 } from "lucide-react"
+import { Search, Plus, Trash2, Edit, ImageIcon, Loader2, ExternalLink } from "lucide-react"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
 import PopupLoader from "@/components/PopupLoader"
@@ -92,7 +92,7 @@ const AllProjects = () => {
           </p>
         </div>
         <Button asChild className="gap-2 shrink-0 shadow-lg hover:shadow-primary/25 transition-all">
-          <Link to="/admin/projects/new">
+          <Link to="/admin/projects">
             <Plus size={16} />
             Add Project
           </Link>
@@ -225,15 +225,37 @@ const AllProjects = () => {
 
                     {/* Custom Fields Badges */}
                     {customFields && Object.keys(customFields).length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-auto pt-4">
-                        {Object.entries(customFields).map(([key, value]) => (
-                          <span
-                            key={key}
-                            className="rounded-lg bg-primary/10 text-primary px-2.5 py-1 text-xs font-medium border border-primary/20"
-                          >
-                            <span className="opacity-70 mr-1">{key}:</span>{String(value)}
-                          </span>
-                        ))}
+                      <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-border/10">
+                        {Object.entries(customFields).map(([key, value]) => {
+                          const valStr = String(value)
+                          const isUrl = valStr.startsWith("http") || valStr.includes(".vercel.app") || valStr.includes("drive.google.com")
+                          
+                          if (isUrl) {
+                            return (
+                              <Button
+                                key={key}
+                                variant="outline"
+                                size="sm"
+                                className="h-7 px-2 text-[10px] gap-1.5 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary transition-colors"
+                                asChild
+                              >
+                                <a href={valStr} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink size={10} />
+                                  {key}
+                                </a>
+                              </Button>
+                            )
+                          }
+                          
+                          return (
+                            <span
+                              key={key}
+                              className="rounded-lg bg-muted/50 text-muted-foreground px-2 py-1 text-[10px] font-medium border border-border/50"
+                            >
+                              <span className="opacity-70 mr-1">{key}:</span>{valStr}
+                            </span>
+                          )
+                        })}
                       </div>
                     )}
                   </CardContent>

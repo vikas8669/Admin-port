@@ -1,9 +1,12 @@
+import ContactTable from "./components/ContactTable"
 
 const RepliedMessages = () => {
   return (
-    <div>
-      RepliedMessages
-    </div>
+    <ContactTable 
+      statusFilter="Replied"
+      title="Replied Messages"
+      description="Review your previous responses and follow up with clients."
+    />
   )
 }
 

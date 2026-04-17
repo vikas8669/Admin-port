@@ -21,9 +21,10 @@ export const getContacts = async (range: "Week" | "Month" | "Year" = "Month") =>
 }
 
 // Fetch all contacts (for table)
-export const fetchAllContacts = async () => {
+export const fetchAllContacts = async (status?: string) => {
   try {
-    const res = await API.get(apiUrl.getAllContacts)
+    const url = status ? `${apiUrl.getAllContacts}?status=${status}` : apiUrl.getAllContacts
+    const res = await API.get(url)
     if (!res.data.success) throw new Error(res.data.message || "Failed to fetch contacts")
     return res.data.data
   } catch (error: any) {

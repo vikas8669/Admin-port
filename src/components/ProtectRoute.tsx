@@ -29,7 +29,6 @@ export default function ProtectedRoute({
         const message = res?.data?.message;
 
         if (user?.role === "Admin") {
-          toast.success(message);
           setIsAuth(true);
         } else {
           setIsAuth(false);

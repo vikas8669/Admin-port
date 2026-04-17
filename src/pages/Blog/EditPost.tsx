@@ -1,8 +1,8 @@
 import * as React from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
 import { Upload, X, Loader2, Save, Send } from "lucide-react"
-import { useCreateBlog } from "@/context/Blog"
+import { useBlog, useUpdateBlog } from "@/context/Blog"
 import { useCategories } from "@/context/Category"
 import PopupLoader from "@/components/PopupLoader"
 import { Button } from "@/components/ui/button"
@@ -18,9 +18,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
-const AddPost = () => {
+const EditPost = () => {
+  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const createMutation = useCreateBlog()
+  // Note: Backend currently returns blog by SLUG or ID in getBlogBySlug depending on implementation.
+  // In our controller, getBlogBySlug uses req.params.slug. 
+  // We'll need a way to fetch by ID or Slug. I'll use Slug for now if provided, or add a fetchById.
+  // Actually, I'll update the controller to handle ID as well or use slug. 
+  // For now, I'll assume useBlog(id) works if I change the hook/endpoint.
+  
+  const { data, isLoading: loadingBlog } = useBlog(id)
+  const updateMutation = useUpdateBlog()
   const { data: catData } = useCategories("Blog")
   const categoriesList = catData?.data || []
 
@@ -34,11 +42,25 @@ const AddPost = () => {
   const [imageFile, setImageFile] = React.useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null)
 
+  const blog = data?.data
+
   React.useEffect(() => {
-    if (!imageFile) {
-      setPreviewUrl(null)
-      return
+    if (blog) {
+      setTitle(blog.title || "")
+      setDescription(blog.description || "")
+      setContent(blog.content || "")
+      setCategory(blog.category || "General")
+      setIsPublished(blog.isPublished ?? true)
+      setFeatured(blog.featured ?? false)
+      setTags(Array.isArray(blog.tags) ? blog.tags.join(", ") : "")
+      if (blog.image?.url) {
+        setPreviewUrl(blog.image.url)
+      }
     }
+  }, [blog])
+
+  React.useEffect(() => {
+    if (!imageFile) return
     const url = URL.createObjectURL(imageFile)
     setPreviewUrl(url)
     return () => URL.revokeObjectURL(url)
@@ -46,26 +68,30 @@ const AddPost = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    if (!id) return
     if (!title.trim() || !content.trim() || !description.trim()) {
       toast.error("Title, description, and content are required.")
       return
     }
 
     try {
-      await createMutation.mutateAsync({
-        title: title.trim(),
-        description: description.trim(),
-        content,
-        category,
-        isPublished,
-        featured,
-        tags: tags.split(",").map(t => t.trim()).filter(Boolean),
-        image: imageFile,
+      await updateMutation.mutateAsync({
+        id,
+        input: {
+          title: title.trim(),
+          description: description.trim(),
+          content,
+          category,
+          isPublished,
+          featured,
+          tags: tags.split(",").map(t => t.trim()).filter(Boolean),
+          image: imageFile,
+        },
       })
-      toast.success("Blog post created successfully!")
+      toast.success("Blog post updated successfully!")
       navigate("/admin/posts")
     } catch (err: any) {
-      toast.error(err.message || "Failed to create blog post.")
+      toast.error(err.message || "Failed to update blog post.")
     }
   }
 
@@ -79,22 +105,24 @@ const AddPost = () => {
     ],
   }
 
+  if (loadingBlog) return <div className="p-10 text-center">Loading post data...</div>
+
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto pb-10">
-      <PopupLoader isOpen={createMutation.isPending} message="Creating your article..." />
+      <PopupLoader isOpen={updateMutation.isPending} message="Updating your article..." />
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Write New Post</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Edit Post</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Share your insights and updates with the world.
+            Update your content and settings.
           </p>
         </div>
         <div className="flex items-center gap-3">
              <Button variant="outline" onClick={() => navigate("/admin/posts")}>Cancel</Button>
-             <Button onClick={handleSubmit} disabled={createMutation.isPending} className="gap-2 shadow-lg hover:shadow-primary/20 transition-all">
-                {createMutation.isPending ? <Loader2 className="animate-spin h-4 w-4" /> : <Send size={16} />}
-                Publish Post
+             <Button onClick={handleSubmit} disabled={updateMutation.isPending} className="gap-2 shadow-lg hover:shadow-primary/20 transition-all">
+                {updateMutation.isPending ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={16} />}
+                Update Post
              </Button>
         </div>
       </div>
@@ -187,7 +215,7 @@ const AddPost = () => {
                     checked={isPublished}
                     onCheckedChange={(v) => setIsPublished(!!v)}
                   />
-                  <Label htmlFor="blog-published">Publish Immediately</Label>
+                  <Label htmlFor="blog-published">Is Published</Label>
                 </div>
                 
                 <div className="flex items-center gap-2">
@@ -196,7 +224,7 @@ const AddPost = () => {
                     checked={featured}
                     onCheckedChange={(v) => setFeatured(!!v)}
                   />
-                  <Label htmlFor="blog-featured">Feature this post</Label>
+                  <Label htmlFor="blog-featured">Featured Post</Label>
                 </div>
               </div>
             </CardContent>
@@ -205,7 +233,7 @@ const AddPost = () => {
           <Card className="border-border/50 shadow-sm overflow-hidden">
             <CardHeader>
               <CardTitle>Cover Image</CardTitle>
-              <CardDescription>Upload a high-quality image.</CardDescription>
+              <CardDescription>Upload to replace current image.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
@@ -218,11 +246,17 @@ const AddPost = () => {
                     />
                     <button
                       type="button"
-                      onClick={() => setImageFile(null)}
+                      onClick={() => {
+                          setImageFile(null)
+                          setPreviewUrl(null)
+                      }}
                       className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <X size={14} />
                     </button>
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                         <span className="text-white text-xs font-bold">Change Image</span>
+                    </div>
                   </div>
                 ) : (
                   <label
@@ -254,4 +288,4 @@ const AddPost = () => {
   )
 }
 
-export default AddPost
+export default EditPost

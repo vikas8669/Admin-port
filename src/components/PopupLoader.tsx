@@ -20,7 +20,7 @@ export default function PopupLoader({ isOpen, message = "Processing..." }: Popup
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            transition={{ type: "spring" as const, stiffness: 300, damping: 25 }}
             className="flex flex-col items-center gap-4 bg-card px-8 py-6 rounded-2xl border shadow-2xl"
           >
             <Loader2 className="h-10 w-10 animate-spin text-primary" />

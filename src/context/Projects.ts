@@ -9,6 +9,7 @@ export type ProjectInput = {
   customFields?: Record<string, string>
   image?: File | null
   images?: File[]
+  packageDetails?: string
 }
 
 const buildProjectFormData = (input: ProjectInput) => {
@@ -25,6 +26,7 @@ const buildProjectFormData = (input: ProjectInput) => {
   if (input.images && input.images.length > 0) {
     input.images.forEach((file) => formData.append("images", file))
   }
+  if (input.packageDetails) formData.append("packageDetails", input.packageDetails)
   return formData
 }
 
