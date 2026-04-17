@@ -21,6 +21,9 @@ const AllProjects = () => {
   const [q, setQ] = React.useState(initialQ)
   const debouncedQ = useDebouncedValue(q, 400)
 
+
+
+  
   const { data, isLoading, isError, error } = useProjects({
     page,
     limit,
