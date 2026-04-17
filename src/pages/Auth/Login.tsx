@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLogin } from "@/context/Login";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const loginSchema = z.object({
     email: z.string().min(1, "Email is required").regex(/^[\w-.]+@gmail\.com$/, "Only Gmail allowed"),
