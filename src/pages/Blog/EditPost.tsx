@@ -1,7 +1,7 @@
 import * as React from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
-import { Upload, X, Loader2, Save, Send } from "lucide-react"
+import { Upload, X, Loader2, Save } from "lucide-react"
 import { useBlog, useUpdateBlog } from "@/context/Blog"
 import { useCategories } from "@/context/Category"
 import PopupLoader from "@/components/PopupLoader"
@@ -95,15 +95,7 @@ const EditPost = () => {
     }
   }
 
-  const quillModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['link', 'image', 'code-block'],
-      ['clean']
-    ],
-  }
+
 
   if (loadingBlog) return <div className="p-10 text-center">Loading post data...</div>
 

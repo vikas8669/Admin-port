@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
-    Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+    Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +24,6 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
 
     const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
         resolver: zodResolver(loginSchema),

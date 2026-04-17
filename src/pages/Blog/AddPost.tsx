@@ -1,7 +1,7 @@
 import * as React from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
-import { Upload, X, Loader2, Save, Send } from "lucide-react"
+import { Upload, X, Loader2, Send } from "lucide-react"
 import { useCreateBlog } from "@/context/Blog"
 import { useCategories } from "@/context/Category"
 import PopupLoader from "@/components/PopupLoader"
@@ -69,15 +69,7 @@ const AddPost = () => {
     }
   }
 
-  const quillModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['link', 'image', 'code-block'],
-      ['clean']
-    ],
-  }
+
 
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto pb-10">

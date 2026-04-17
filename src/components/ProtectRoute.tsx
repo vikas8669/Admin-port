@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import API from "@/api/api";
 import { apiUrl } from "@/api/apiEndPoints";
-import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProtectedRoute({
@@ -26,7 +25,6 @@ export default function ProtectedRoute({
       try {
         const res = await API.get(apiUrl.adminOnly);
         const user = res.data?.user;
-        const message = res?.data?.message;
 
         if (user?.role === "Admin") {
           setIsAuth(true);

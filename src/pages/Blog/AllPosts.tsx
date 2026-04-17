@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useDebouncedValue } from "@/hooks/use-debounce"
-import { Search, Plus, Trash2, Edit, ImageIcon, Loader2, Eye, FileText } from "lucide-react"
+import { Search, Plus, Trash2, Edit, ImageIcon, Loader2, FileText } from "lucide-react"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
 import PopupLoader from "@/components/PopupLoader"
@@ -18,7 +18,7 @@ const AllPosts = () => {
   const initialCategory = searchParams.get("category") || "All"
 
   const [page, setPage] = React.useState(initialPage)
-  const [limit, setLimit] = React.useState(initialLimit)
+  const [limit] = React.useState(initialLimit)
   const [q, setQ] = React.useState(initialQ)
   const [category, setCategory] = React.useState(initialCategory)
   const debouncedQ = useDebouncedValue(q, 400)

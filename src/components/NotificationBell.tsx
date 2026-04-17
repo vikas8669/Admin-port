@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
   Bell, 
@@ -6,12 +6,10 @@ import {
   ShoppingCart, 
   CheckCheck, 
   Search, 
-  Clock, 
   ArrowRight,
   Inbox,
   CreditCard,
   Trash2,
-  AlertCircle
 } from "lucide-react";
 import { fetchNotifications, markRead, markAllRead, removeNotification } from "@/context/Notification";
 import {
@@ -20,7 +18,6 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetDescription,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +29,7 @@ export default function NotificationBell() {
   const queryClient = useQueryClient();
 
   // Unified Notification Query
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["notifications"],
     queryFn: fetchNotifications,
     refetchInterval: 60000, // Poll every minute
